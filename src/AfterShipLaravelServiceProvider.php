@@ -14,12 +14,11 @@ class AfterShipLaravelServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->alias('aftership-laravel', AfterShipService::class);
-        $this->app->singleton('aftership-laravel', function () {
+        $this->mergeConfigFrom(__DIR__ . "/../config/aftership-laravel.php", "aftership-laravel");
+
+        $this->app->bind("aftership-service", function () {
             return new AfterShipService;
         });
-
-        $this->registerPublishing();
     }
 
     /**
@@ -29,21 +28,15 @@ class AfterShipLaravelServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-    }
-
-    /**
-     * Register the package's publishable resources.
-     *
-     * @return void
-     */
-    private function registerPublishing()
-    {
         if ($this->app->runningInConsole()) {
-            // Lumen lacks a config_path() helper, so we use base_path()
-            $this->publishes([
-                __DIR__.'/../config/aftership-laravel.php' => base_path('config/aftership-laravel.php'),
-            ], 'laravel-aftership-config');
+            $this->publishes(
+                [
+                    __DIR__ . "/../config/aftership-laravel.php" => config_path(
+                        "aftership-laravel.php"
+                    ),
+                ],
+                "aftership-laravel-config"
+            );
         }
     }
 }
