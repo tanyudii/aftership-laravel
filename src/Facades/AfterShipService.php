@@ -16,6 +16,6 @@ class AfterShipService extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'aftership-laravel';
+        return 'aftership-service';
     }
 }
